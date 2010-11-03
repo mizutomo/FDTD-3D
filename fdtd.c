@@ -274,9 +274,9 @@ void setup_grid(grid_t* grid, float cfl, int nx, int ny, int nz,
 	grid->nx = nx;
 	grid->ny = ny;
   grid->nz = nz;
-	grid->dx = (double*)malloc(sizeof(double) * nx+1);
-	grid->dy = (double*)malloc(sizeof(double) * ny+1);
-  grid->dz = (double*)malloc(sizeof(double) * nz+1);
+	grid->dx = (double*)malloc(sizeof(double) * (nx+1));
+	grid->dy = (double*)malloc(sizeof(double) * (ny+1));
+  grid->dz = (double*)malloc(sizeof(double) * (nz+1));
 	grid->dt = dt;
 
 	// グリッド初期化
@@ -360,6 +360,17 @@ void print_point_value(FILE* fp, double time, int num, ...)
   va_end(list);
 }
 
+void print_line_value(FILE* fp, grid_t* mg, int step)
+{
+	fprintf(fp, "# STEP=%d\n", step);
+  int x;
+
+  for (x = 0; x < mg->nx + 1; x++) {
+    fprintf(fp, "%d, %g\n", x, mg->ey[x][(mg->ny)/2][(mg->nz)/2].val);
+  }
+	fprintf(fp, "\n");
+}
+
 void print_map_value(FILE* fp, grid_t* mg, int step)
 {
 	int x, y;
@@ -378,10 +389,12 @@ void write_waveforms(FILE** fps, int step, grid_t* mg)
 {
   double current_time = step * mg->dt;
 
-  print_point_value(fps[0], current_time, 3,
+  print_point_value(fps[0], current_time, 4,
                     mg->hz[mg->nx-10][mg->ny/2][mg->nz/2].val, mg->hz[mg->nx-30][mg->ny/2][mg->nz/2].val,
-                    mg->hz[10][mg->ny/2][mg->nz/2].val);
+                    mg->hz[10][mg->ny/2][mg->nz/2].val,
+                    mg->ex[mg->nx/2][mg->ny/2][0].val);
 
+  print_line_value(fps[2], mg, step);
   if (step % 10 == 0) {
     print_map_value(fps[5], mg, step);
   }
@@ -396,7 +409,6 @@ void update_mg_h_field(grid_t* mg)
 
 void update_mg_e_field(grid_t* mg)
 {
-  // Ex&Eyの計算
   calc_mg_ex(mg->ex, mg->hy, mg->hz, mg->nx, mg->ny, mg->nz);
   calc_mg_ey(mg->ey, mg->hz, mg->hx, mg->nx, mg->ny, mg->nz);
   calc_mg_ez(mg->ez, mg->hx, mg->hy, mg->nx, mg->ny, mg->nz);
@@ -446,7 +458,6 @@ void calc_fdtd(grid_t* mg, double stop_time)
     inject_stimulus(mg, step);
 
     update_mg_e_field(mg);
-
     update_external_boundary(mg);
 
     write_waveforms(fps, step, mg);
@@ -466,9 +477,9 @@ int main(int argc, char** argv)
   int nx = 100;
   int ny = 100;
   int nz = 100;
-  double dx = 0.09;
-  double dy = 0.09;
-  double dz = 0.09;
+  double dx = 0.1;
+  double dy = 0.1;
+  double dz = 0.1;
 
   float cfl;
 

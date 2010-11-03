@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "common.h"
 
 void update_xy(ex_t*** ex, ey_t*** ey, double* dz, int nx, int ny, int nz, int dt)
