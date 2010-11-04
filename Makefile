@@ -1,8 +1,9 @@
 # Makefile for 3D FDTD Program
 
 CC = /usr/bin/gcc
+#CC = /opt/local/bin/gcc-mp-4.3
 OBJS = fdtd.o normal.o mur1st.o 
-CFLAGS = -Wall -O2 #-fopenmp
+CFLAGS = -Wall -Wconversion -O2 #-fopenmp
 #CFLAGS = -g -Wall -O0 
 DEBUGFLAG = -pg
 INCLUDES = -I. -I/opt/local/include
