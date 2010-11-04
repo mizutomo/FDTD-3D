@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "common.h"
 
-void update_xy(ex_t*** ex, ey_t*** ey, double* dz, int nx, int ny, int nz, int dt)
+void update_xy(ex_t*** ex, ey_t*** ey, double* dz, int nx, int ny, int nz, double dt)
 {
   int x, y;
   double c = LIGHT * dt;
@@ -25,7 +25,7 @@ void update_xy(ex_t*** ex, ey_t*** ey, double* dz, int nx, int ny, int nz, int d
   }
 }
 
-void update_yz(ey_t*** ey, ez_t*** ez, double* dx, int nx, int ny, int nz, int dt)
+void update_yz(ey_t*** ey, ez_t*** ez, double* dx, int nx, int ny, int nz, double dt)
 {
   int y, z;
   double c = LIGHT * dt;
@@ -49,7 +49,7 @@ void update_yz(ey_t*** ey, ez_t*** ez, double* dx, int nx, int ny, int nz, int d
   }
 }
 
-void update_zx(ez_t*** ez, ex_t*** ex, double* dy, int nx, int ny, int nz, int dt)
+void update_zx(ez_t*** ez, ex_t*** ex, double* dy, int nx, int ny, int nz, double dt)
 {
   int z, x;
   double c = LIGHT * dt;

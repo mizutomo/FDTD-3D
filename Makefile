@@ -2,7 +2,7 @@
 
 CC = /usr/bin/gcc
 OBJS = fdtd.o normal.o mur1st.o 
-CFLAGS = -Wall -O2 #-fopenmp
+CFLAGS = -Wall -O2 -fopenmp
 #CFLAGS = -g -Wall -O0 
 DEBUGFLAG = -pg
 INCLUDES = -I. -I/opt/local/include
