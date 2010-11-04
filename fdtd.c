@@ -16,7 +16,7 @@ double square(double x)
   return x * x;
 }
 
-void set_delta_map(double* d, int leng, float size)
+void set_delta_map(double* d, int leng, double size)
 {
   int i;
 
@@ -25,7 +25,7 @@ void set_delta_map(double* d, int leng, float size)
   }
 }
 
-double calc_cfl_constant(float cfl, double dx, double dy, double dz)
+double calc_cfl_constant(double dx, double dy, double dz, float cfl)
 {
   double dt;
 
@@ -466,7 +466,7 @@ void calc_fdtd(grid_t* mg, double stop_time)
   close_output_files(fps);
 }
 
-void sig_handler_sigint(int sig) {
+void sig_handler_sigint() {
   close_output_files(fps);
   exit(EXIT_FAILURE);
 }
@@ -482,12 +482,13 @@ int main(int argc, char** argv)
   double dz = 0.1;
 
   float cfl;
+  double dt;
 
   grid_t mg;
 
   check_opt(argc, argv, &cfl);
 
-  double dt = calc_cfl_constant(cfl, dx, dy, dz);
+  dt = calc_cfl_constant(dx, dy, dz, cfl);
 
   setup_grid(&mg, cfl, nx, ny, nz, dx, dy, dz, dt);
 
