@@ -22,6 +22,8 @@ double dt;
 
 grid_t mg;
 
+double emax = 1e-10;
+
 double square(double x)
 {
   return x * x;
@@ -477,5 +479,16 @@ void init()
 double get_delta_t()
 {
   return mg.dt;
+}
+
+double eabs(int i, int j, int k)
+{
+  double er = 1 / emax;
+  double e = sqrt(
+      square(mg.ex[i][j][k].val) +
+      square(mg.ey[i][j][k].val) +
+      square(mg.ez[i][j][k].val));
+  if (emax < e) emax = e;
+  return er * e;
 }
 
