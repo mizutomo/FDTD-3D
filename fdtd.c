@@ -10,6 +10,17 @@
 // グローバル変数
 #define FILENUM (8)
 FILE* fps[FILENUM];
+int nx = 100;
+int ny = 100;
+int nz = 100;
+double dx = 0.1;
+double dy = 0.1;
+double dz = 0.1;
+
+double cfl = 0.999f;
+double dt;
+
+grid_t mg;
 
 double square(double x)
 {
@@ -25,7 +36,7 @@ void set_delta_map(double* d, int leng, double size)
   }
 }
 
-double calc_cfl_constant(double dx, double dy, double dz, float cfl)
+double calc_cfl_constant(double dx, double dy, double dz, double cfl)
 {
   double dt;
 
@@ -255,18 +266,7 @@ void free_3d_ary(void*** ary, int nx, int ny)
   free(ary);
 }
 
-void check_opt(int argc, char** argv, float* cfl)
-{
-  if (argc != 2) {
-    printf("Error: Invalid Arguments.\n");
-    printf("Usage: fdtd cfl\n");
-    exit(10);
-  } else {
-    *cfl = atof(argv[1]);
-  }
-}
-
-void setup_grid(grid_t* grid, float cfl, int nx, int ny, int nz,
+void setup_grid(grid_t* grid, double cfl, int nx, int ny, int nz,
     double delta_x, double delta_y, double delta_z, double dt)
 {
   mat_t*** mat;
@@ -324,7 +324,7 @@ void setup_grid(grid_t* grid, float cfl, int nx, int ny, int nz,
   free_3d_ary((void***)mat, nx, ny);
 }
 
-void open_output_files(FILE** fps)
+void open_output_files()
 {
   fps[0] = fopen("wave/fdtd_point.csv", "w");
   fps[1] = fopen("wave/fdtd_point_subgrid.csv", "w");
@@ -336,7 +336,7 @@ void open_output_files(FILE** fps)
   fps[7] = fopen("wave/fdtd_energy.csv", "w");
 }
 
-void close_output_files(FILE** fps)
+void close_output_files()
 {
   int i;
   for (i = 0; i < FILENUM; i++) {
@@ -442,28 +442,19 @@ void inject_stimulus(grid_t* mg, int step)
   mg->hz[(mg->nx)/2][(mg->ny)/2][(mg->nz)/2].val += stimulus * mg->dt;   // Soft Source
 }
 
-void calc_fdtd(grid_t* mg, double stop_time)
+void calc_fdtd(int step, int last_step)
 {
-  int step;
-  int last_step = (int)(stop_time / mg->dt);
-
-  open_output_files(fps);
-
-  for (step = 0; step <= last_step; step++) {
-    if (step % 100 == 0) {
-      printf("%d / %d (%.2f %%)\n", step, last_step, (double)step/last_step*100);
-    }
-
-    update_mg_h_field(mg);
-    inject_stimulus(mg, step);
-
-    update_mg_e_field(mg);
-    update_external_boundary(mg);
-
-    write_waveforms(fps, step, mg);
+  if (step % 100 == 0) {
+    printf("%d / %d (%.2f %%)\n", step, last_step, (double)step/last_step*100);
   }
 
-  close_output_files(fps);
+  update_mg_h_field(&mg);
+  inject_stimulus(&mg, step);
+
+  update_mg_e_field(&mg);
+  update_external_boundary(&mg);
+
+  write_waveforms(fps, step, &mg);
 }
 
 void sig_handler_sigint() {
@@ -471,23 +462,8 @@ void sig_handler_sigint() {
   exit(EXIT_FAILURE);
 }
 
-int main(int argc, char** argv)
+void init()
 {
-  double stop_time = 100e-9;
-  int nx = 100;
-  int ny = 100;
-  int nz = 100;
-  double dx = 0.1;
-  double dy = 0.1;
-  double dz = 0.1;
-
-  float cfl;
-  double dt;
-
-  grid_t mg;
-
-  check_opt(argc, argv, &cfl);
-
   dt = calc_cfl_constant(dx, dy, dz, cfl);
 
   setup_grid(&mg, cfl, nx, ny, nz, dx, dy, dz, dt);
@@ -496,10 +472,10 @@ int main(int argc, char** argv)
     printf("[Error] failed to set signal handler.\n");
     exit(EXIT_FAILURE);
   }
-
-  printf("FDTD Calculating...\n");
-  calc_fdtd(&mg, stop_time);
-  printf("Finished FDTD Calculating.\n");
-
-  return 0;
 }
+
+double get_delta_t()
+{
+  return mg.dt;
+}
+
