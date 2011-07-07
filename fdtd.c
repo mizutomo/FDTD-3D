@@ -148,180 +148,180 @@ hz_t*** alloc_3d_array_hz(int nx, int ny, int nz)
 
 void initialize_ex(ex_t*** ary, int nx, int ny, int nz)
 {
-	int i, j, k;
+  int i, j, k;
 
-	for (i = 0; i < nx; i++) {
-		for (j = 0; j < ny; j++) {
+  for (i = 0; i < nx; i++) {
+    for (j = 0; j < ny; j++) {
       for (k = 0; k < nz; k++) {
         ary[i][j][k].val = 0.0;
         ary[i][j][k].hist = 0.0;
       }
-		}
-	}
+    }
+  }
 }
 
 void initialize_ey(ey_t*** ary, int nx, int ny, int nz)
 {
-	int i, j, k;
+  int i, j, k;
 
-	for (i = 0; i < nx; i++) {
-		for (j = 0; j < ny; j++) {
+  for (i = 0; i < nx; i++) {
+    for (j = 0; j < ny; j++) {
       for (k = 0; k < nz; k++) {
         ary[i][j][k].val = 0.0;
         ary[i][j][k].hist = 0.0;
       }
-		}
-	}
+    }
+  }
 }
 
 void initialize_ez(ez_t*** ary, int nx, int ny, int nz)
 {
-	int i, j, k;
+  int i, j, k;
 
-	for (i = 0; i < nx; i++) {
-		for (j = 0; j < ny; j++) {
+  for (i = 0; i < nx; i++) {
+    for (j = 0; j < ny; j++) {
       for (k = 0; k < nz; k++) {
         ary[i][j][k].val = 0.0;
         ary[i][j][k].hist = 0.0;
       }
-		}
-	}
+    }
+  }
 }
 
 void initialize_hx(hx_t*** ary, int nx, int ny, int nz)
 {
-	int i, j, k;
+  int i, j, k;
 
-	for (i = 0; i < nx; i++) {
-		for (j = 0; j < ny; j++) {
+  for (i = 0; i < nx; i++) {
+    for (j = 0; j < ny; j++) {
       for (k = 0; k < nz; k++) {
         ary[i][j][k].val = 0.0;
       }
-		}
-	}
+    }
+  }
 }
 
 void initialize_hy(hy_t*** ary, int nx, int ny, int nz)
 {
-	int i, j, k;
+  int i, j, k;
 
-	for (i = 0; i < nx; i++) {
-		for (j = 0; j < ny; j++) {
+  for (i = 0; i < nx; i++) {
+    for (j = 0; j < ny; j++) {
       for (k = 0; k < nz; k++) {
         ary[i][j][k].val = 0.0;
       }
-		}
-	}
+    }
+  }
 }
 
 void initialize_hz(hz_t*** ary, int nx, int ny, int nz)
 {
-	int i, j, k;
+  int i, j, k;
 
-	for (i = 0; i < nx; i++) {
-		for (j = 0; j < ny; j++) {
+  for (i = 0; i < nx; i++) {
+    for (j = 0; j < ny; j++) {
       for (k = 0; k < nz; k++) {
         ary[i][j][k].val = 0.0;
       }
-		}
-	}
+    }
+  }
 }
 
 void initialize_mat_array(mat_t*** ary, int nx, int ny, int nz)
 {
-	int i, j, k;
+  int i, j, k;
 
-	for (i = 0; i < nx; i++) {
-		for (j = 0; j < ny; j++) {
+  for (i = 0; i < nx; i++) {
+    for (j = 0; j < ny; j++) {
       for (k = 0; k < nz; k++) {
         ary[i][j][k].eps = 1.0 * PERMITTIVITY;
         ary[i][j][k].sig = 0.0;
         ary[i][j][k].mu  = 1.0 * PERMEABILITY;
       }
-		}
-	}
+    }
+  }
 }
 
 void free_3d_ary(void*** ary, int nx, int ny)
 {
-	int i, j;
+  int i, j;
 
-	for (i = 0; i < nx; i++) {
+  for (i = 0; i < nx; i++) {
     for (j = 0; j < ny; j++) {
       free(ary[i][j]);
     }
     free(ary[i]);
-	}
-	free(ary);
+  }
+  free(ary);
 }
 
 void check_opt(int argc, char** argv, float* cfl)
 {
-	if (argc != 2) {
-		printf("Error: Invalid Arguments.\n");
-		printf("Usage: fdtd cfl\n");
-		exit(10);
-	} else {
-		*cfl = atof(argv[1]);
-	}
+  if (argc != 2) {
+    printf("Error: Invalid Arguments.\n");
+    printf("Usage: fdtd cfl\n");
+    exit(10);
+  } else {
+    *cfl = atof(argv[1]);
+  }
 }
 
 void setup_grid(grid_t* grid, float cfl, int nx, int ny, int nz,
-                double delta_x, double delta_y, double delta_z, double dt)
+    double delta_x, double delta_y, double delta_z, double dt)
 {
-	mat_t*** mat;
+  mat_t*** mat;
 
-	grid->nx = nx;
-	grid->ny = ny;
+  grid->nx = nx;
+  grid->ny = ny;
   grid->nz = nz;
-	grid->dx = (double*)malloc(sizeof(double) * (nx+1));
-	grid->dy = (double*)malloc(sizeof(double) * (ny+1));
+  grid->dx = (double*)malloc(sizeof(double) * (nx+1));
+  grid->dy = (double*)malloc(sizeof(double) * (ny+1));
   grid->dz = (double*)malloc(sizeof(double) * (nz+1));
-	grid->dt = dt;
+  grid->dt = dt;
 
-	// グリッド初期化
-	set_delta_map(grid->dx, nx+1, delta_x);
-	set_delta_map(grid->dy, ny+1, delta_y);
+  // グリッド初期化
+  set_delta_map(grid->dx, nx+1, delta_x);
+  set_delta_map(grid->dy, ny+1, delta_y);
   set_delta_map(grid->dz, nz+1, delta_z);
 
-	// CFL条件の設定
+  // CFL条件の設定
   printf("Main Grid Info\n");
-	printf("  Num X  : %d\n", nx);
-	printf("  Num Y  : %d\n", ny);
+  printf("  Num X  : %d\n", nx);
+  printf("  Num Y  : %d\n", ny);
   printf("  Num Z  : %d\n", nz);
-	printf("  Min X  : %f\n", delta_x);
-	printf("  Min Y  : %f\n", delta_y);
+  printf("  Min X  : %f\n", delta_x);
+  printf("  Min Y  : %f\n", delta_y);
   printf("  Min Z  : %f\n", delta_z);
-	printf("  CFL    : %f\n", cfl);
-	printf("  dt     : %g\n", grid->dt);
+  printf("  CFL    : %f\n", cfl);
+  printf("  dt     : %g\n", grid->dt);
 
-	// 材料配列の確保
-	mat = alloc_3d_array_mat(nx+1, ny+1, nz+1);
-	initialize_mat_array(mat, nx+1, ny+1, nz+1);
+  // 材料配列の確保
+  mat = alloc_3d_array_mat(nx+1, ny+1, nz+1);
+  initialize_mat_array(mat, nx+1, ny+1, nz+1);
 
-	// 電磁界配列の確保
-	grid->ex = alloc_3d_array_ex(nx,   ny+1, nz+1);
-	grid->ey = alloc_3d_array_ey(nx+1, ny,   nz+1);
+  // 電磁界配列の確保
+  grid->ex = alloc_3d_array_ex(nx,   ny+1, nz+1);
+  grid->ey = alloc_3d_array_ey(nx+1, ny,   nz+1);
   grid->ez = alloc_3d_array_ez(nx+1, ny+1, nz);
   grid->hx = alloc_3d_array_hx(nx+1, ny,   nz);
   grid->hy = alloc_3d_array_hy(nx,   ny+1, nz);
-	grid->hz = alloc_3d_array_hz(nx,   ny,   nz+1);
-	initialize_ex(grid->ex, nx,   ny+1, nz+1);
-	initialize_ey(grid->ey, nx+1, ny,   nz+1);
+  grid->hz = alloc_3d_array_hz(nx,   ny,   nz+1);
+  initialize_ex(grid->ex, nx,   ny+1, nz+1);
+  initialize_ey(grid->ey, nx+1, ny,   nz+1);
   initialize_ez(grid->ez, nx+1, ny+1, nz);
   initialize_hx(grid->hx, nx+1, ny,   nz);
   initialize_hy(grid->hy, nx,   ny+1, nz);
   initialize_hz(grid->hz, nx,   ny,   nz+1);
 
-	// 係数行列の計算
-	std_initialize_ex(grid->ex, mat, grid->dy, grid->dz, nx, ny, nz, grid->dt);
-	std_initialize_ey(grid->ey, mat, grid->dz, grid->dx, nx, ny, nz, grid->dt);
+  // 係数行列の計算
+  std_initialize_ex(grid->ex, mat, grid->dy, grid->dz, nx, ny, nz, grid->dt);
+  std_initialize_ey(grid->ey, mat, grid->dz, grid->dx, nx, ny, nz, grid->dt);
   std_initialize_ez(grid->ez, mat, grid->dx, grid->dy, nx, ny, nz, grid->dt);
-	std_initialize_hx(grid->hx, mat, grid->dy, grid->dz, nx, ny, nz, grid->dt);
-	std_initialize_hy(grid->hy, mat, grid->dz, grid->dx, nx, ny, nz, grid->dt);
-	std_initialize_hz(grid->hz, mat, grid->dx, grid->dy, nx, ny, nz, grid->dt);
+  std_initialize_hx(grid->hx, mat, grid->dy, grid->dz, nx, ny, nz, grid->dt);
+  std_initialize_hy(grid->hy, mat, grid->dz, grid->dx, nx, ny, nz, grid->dt);
+  std_initialize_hz(grid->hz, mat, grid->dx, grid->dy, nx, ny, nz, grid->dt);
 
-	free_3d_ary((void***)mat, nx, ny);
+  free_3d_ary((void***)mat, nx, ny);
 }
 
 void open_output_files(FILE** fps)
@@ -362,27 +362,27 @@ void print_point_value(FILE* fp, double time, int num, ...)
 
 void print_line_value(FILE* fp, grid_t* mg, int step)
 {
-	fprintf(fp, "# STEP=%d\n", step);
+  fprintf(fp, "# STEP=%d\n", step);
   int x;
 
   for (x = 0; x < mg->nx + 1; x++) {
     fprintf(fp, "%d, %g\n", x, mg->ey[x][(mg->ny)/2][(mg->nz)/2].val);
   }
-	fprintf(fp, "\n");
+  fprintf(fp, "\n");
 }
 
 void print_map_value(FILE* fp, grid_t* mg, int step)
 {
-	int x, y;
+  int x, y;
 
-	fprintf(fp, "# STEP = %d\n", step);
-	for (x = 0; x < mg->nx; x++) {
-		for (y = 0; y < mg->ny; y++) {
+  fprintf(fp, "# STEP = %d\n", step);
+  for (x = 0; x < mg->nx; x++) {
+    for (y = 0; y < mg->ny; y++) {
       fprintf(fp, "%d, %d, %g\n", x, y, sqrt(square(mg->hz[x][y][mg->nz/2].val)));
-		}
-		fprintf(fp, "\n");
-	}
-	fprintf(fp, "\n");
+    }
+    fprintf(fp, "\n");
+  }
+  fprintf(fp, "\n");
 }
 
 void write_waveforms(FILE** fps, int step, grid_t* mg)
@@ -390,9 +390,9 @@ void write_waveforms(FILE** fps, int step, grid_t* mg)
   double current_time = step * mg->dt;
 
   print_point_value(fps[0], current_time, 4,
-                    mg->hz[mg->nx-10][mg->ny/2][mg->nz/2].val, mg->hz[mg->nx-30][mg->ny/2][mg->nz/2].val,
-                    mg->hz[10][mg->ny/2][mg->nz/2].val,
-                    mg->ex[mg->nx/2][mg->ny/2][0].val);
+      mg->hz[mg->nx-10][mg->ny/2][mg->nz/2].val, mg->hz[mg->nx-30][mg->ny/2][mg->nz/2].val,
+      mg->hz[10][mg->ny/2][mg->nz/2].val,
+      mg->ex[mg->nx/2][mg->ny/2][0].val);
 
   print_line_value(fps[2], mg, step);
   if (step % 10 == 0) {
@@ -421,25 +421,25 @@ void update_external_boundary(grid_t* mg)
   update_zx(mg->ez, mg->ex, mg->dy, mg->nx, mg->ny, mg->nz, mg->dt);
   ex_hist_update(mg->ex, mg->nx, mg->ny, mg->nz);
   ey_hist_update(mg->ey, mg->nx, mg->ny, mg->nz);
-  ez_hist_update(mg->ez, mg->nx, mg->ny, mg->nz);  
+  ez_hist_update(mg->ez, mg->nx, mg->ny, mg->nz);
 }
 
 double calc_gauss_wave(int step, double dt)
 {
-	double tc = 10e-9; 
-	double pw = 1e-9;
-	double t_current = ((float)step - 0.5) * dt;
-	double t_eff;
+  double tc = 10e-9;
+  double pw = 1e-9;
+  double t_current = ((float)step - 0.5) * dt;
+  double t_eff;
 
-	t_eff = (t_current - tc) / pw;
+  t_eff = (t_current - tc) / pw;
 
-	return 1.0 * exp(-1 * (t_eff * t_eff));	
+  return 1.0 * exp(-1 * (t_eff * t_eff));
 }
 
 void inject_stimulus(grid_t* mg, int step)
 {
   double stimulus = calc_gauss_wave(step, mg->dt);
-  mg->hz[(mg->nx)/2][(mg->ny)/2][(mg->nz)/2].val += stimulus * mg->dt;   // Soft Source 
+  mg->hz[(mg->nx)/2][(mg->ny)/2][(mg->nz)/2].val += stimulus * mg->dt;   // Soft Source
 }
 
 void calc_fdtd(grid_t* mg, double stop_time)
@@ -495,11 +495,11 @@ int main(int argc, char** argv)
   if (SIG_ERR == signal(SIGINT, sig_handler_sigint)) {
     printf("[Error] failed to set signal handler.\n");
     exit(EXIT_FAILURE);
-  }  
+  }
 
   printf("FDTD Calculating...\n");
-	calc_fdtd(&mg, stop_time);
-	printf("Finished FDTD Calculating.\n");
+  calc_fdtd(&mg, stop_time);
+  printf("Finished FDTD Calculating.\n");
 
   return 0;
 }
